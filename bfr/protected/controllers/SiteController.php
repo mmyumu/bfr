@@ -49,14 +49,11 @@ class SiteController extends Controller
 	/**
 	 * Displays the contact page
 	 */
-	public function actionContact()
-	{
+	public function actionContact() {
 		$model=new ContactForm;
-		if(isset($_POST['ContactForm']))
-		{
+		if(isset($_POST['ContactForm'])) {
 			$model->attributes=$_POST['ContactForm'];
-			if($model->validate())
-			{
+			if($model->validate()) {
 				$name='=?UTF-8?B?'.base64_encode($model->name).'?=';
 				$subject='=?UTF-8?B?'.base64_encode($model->subject).'?=';
 				$headers="From: $name <{$model->email}>\r\n".
@@ -64,7 +61,24 @@ class SiteController extends Controller
 					"MIME-Version: 1.0\r\n".
 					"Content-type: text/plain; charset=UTF-8";
 
-				mail(Yii::app()->params['adminEmail'],$subject,$model->body,$headers);
+				Yii::import('application.extensions.phpmailer.JPhpMailer');
+				$mail = new JPhpMailer;
+				$mail->IsSMTP();
+				$mail->Host = 'smtp.gmail.com';
+				$mail->SMTPAuth = true;
+				$mail->SMTPDebug = 2;
+				$mail->SMTPSecure = "ssl";
+				$mail->Port = '465';
+				$mail->Username = 'bfrthegame@gmail.com';
+				$mail->Password = '669868Bfr!';
+				$mail->SetFrom('bfrthegame@gmail.com', 'BFR');
+				$mail->Subject = 'PHPMailer Test Subject via smtp, basic with authentication';
+				$mail->AltBody = 'To view the message, please use an HTML compatible email viewer!';
+				$mail->MsgHTML('<h1>JUST A TEST!</h1>');
+				$mail->AddAddress('bfrthegame@gmail.com', 'BFR TEST');
+				$mail->Send();
+
+// 				mail(Yii::app()->params['adminEmail'],$subject,$model->body,$headers);
 				Yii::app()->user->setFlash('contact','Thank you for contacting us. We will respond to you as soon as possible.');
 				$this->refresh();
 			}
