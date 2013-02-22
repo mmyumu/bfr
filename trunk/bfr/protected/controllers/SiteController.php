@@ -32,6 +32,10 @@ class SiteController extends Controller
 		$this->render('index');
 	}
 
+	public function actionManage() {
+		$this->render('manage');
+	}
+
 	/**
 	 * This is the action to handle external exceptions.
 	 */
@@ -75,7 +79,7 @@ class SiteController extends Controller
 				$mail->Subject = 'PHPMailer Test Subject via smtp, basic with authentication';
 				$mail->AltBody = 'To view the message, please use an HTML compatible email viewer!';
 				$mail->MsgHTML('<h1>JUST A TEST!</h1>');
-				$mail->AddAddress('bfrthegame@gmail.com', 'BFR TEST');
+				$mail->AddAddress(Yii::app()->params['adminEmail'], 'BFR Contact');
 				$mail->Send();
 
 // 				mail(Yii::app()->params['adminEmail'],$subject,$model->body,$headers);
